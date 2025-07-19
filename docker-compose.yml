@@ -29,6 +29,11 @@ services:
     networks:
       - read_coffee_pos_net
 
+  # redis:
+  #   image: redis:latest
+  #   ports:
+  #     - "6379:6379"
+
 networks:
   read_coffee_pos_net:
 
