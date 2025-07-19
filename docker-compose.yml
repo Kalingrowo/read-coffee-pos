@@ -1,0 +1,36 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: read_coffee_pos_app
+    volumes:
+      - .:/var/www/html
+    working_dir: /var/www/html
+    networks:
+      - read_coffee_pos_net
+    ports:
+      - "9000:9000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  web:
+    image: nginx:stable
+    container_name: read_coffee_pos_web
+    volumes:
+      - .:/var/www/html
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./docker/nginx/certs:/etc/nginx/certs
+    ports:
+      - "8080:80"
+      - "8443:443"
+    depends_on:
+      - app
+    networks:
+      - read_coffee_pos_net
+
+networks:
+  read_coffee_pos_net:
+
+volumes:
+  dbdata:
