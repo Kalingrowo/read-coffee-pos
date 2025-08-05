@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 class BaseApiController extends Controller
 {
-    protected function successResponse($data = null, $message = 'Success', $code = 200): JsonResponse
+    protected function successResponse($data = null, $message = 'Success', $code = 200)
     {
         return response()->json([
             'status' => 'success',
@@ -15,7 +13,7 @@ class BaseApiController extends Controller
         ], $code);
     }
 
-    protected function errorResponse($message = 'Error', $code = 500, $errors = null): JsonResponse
+    protected function errorResponse($message = 'Error', $code = 500, $errors = null)
     {
         $response = [
             'status' => 'error',
@@ -28,3 +26,4 @@ class BaseApiController extends Controller
 
         return response()->json($response, $code);
     }
+}
