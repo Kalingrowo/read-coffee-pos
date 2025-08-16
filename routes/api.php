@@ -7,18 +7,16 @@ use App\Http\Controllers\Api\V1\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-
-
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
-Route::prefix('v1')->middleware('auth:sanctum')->group(function() {
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
 
-    Route::prefix('categories')->group(function() {
+    Route::prefix('categories')->group(function () {
         Route::get('/', [CategoryController::class, 'index']);
         Route::post('/', [CategoryController::class, 'store']);
         Route::get('/{id}', [CategoryController::class, 'show']);
@@ -26,7 +24,7 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function() {
         Route::delete('/{id}', [CategoryController::class, 'destroy']);
     });
 
-    Route::prefix('products')->group(function() {
+    Route::prefix('products')->group(function () {
         Route::get('/', [ProductController::class, 'index']);
         Route::post('/', [ProductController::class, 'store']);
         Route::get('/{id}', [ProductController::class, 'show']);
@@ -34,7 +32,7 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function() {
         Route::delete('/{id}', [ProductController::class, 'destroy']);
     });
 
-    Route::prefix('orders')->group(function() {
+    Route::prefix('orders')->group(function () {
         Route::get('/', [OrderController::class, 'index']);
         Route::post('/', [OrderController::class, 'store']);
         Route::get('/{id}', [OrderController::class, 'show']);
