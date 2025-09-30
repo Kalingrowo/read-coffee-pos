@@ -42,34 +42,34 @@ class CartController extends BaseApiController
     }
 
     /**
-     * Add product to cart.
+     * Store product to cart.
      */
-    public function add(Request $request)
+    public function store(Request $request)
     {
         try {
             $validated = $request->validate([
                 'product_id' => 'required|exists:products,id',
-                'quantity'   => 'required|integer|min:1'
+                'quantity' => 'required|integer|min:1'
             ]);
-    
+
             $cart = json_decode(Redis::get($this->cartKey), true) ?? [];
-    
+
             $product = Product::findOrFail($validated['product_id']);
-    
+
             // If already exists, increase qty
             if (isset($cart[$product->id])) {
                 $cart[$product->id]['quantity'] += $validated['quantity'];
             } else {
                 $cart[$product->id] = [
                     'product_id' => $product->id,
-                    'name'       => $product->name,
-                    'price'      => $product->price,
-                    'quantity'   => $validated['quantity']
+                    'name' => $product->name,
+                    'price' => $product->price,
+                    'quantity' => $validated['quantity']
                 ];
             }
-    
+
             Redis::set($this->cartKey, json_encode($cart));
-    
+
             return $this->successResponse($cart, 'Item added to cart');
         } catch (\Throwable $th) {
             Log::error('Cart Add Error: ' . $th->getMessage(), ['trace' => $th->getTraceAsString()]);
@@ -85,19 +85,19 @@ class CartController extends BaseApiController
         try {
             $validated = $request->validate([
                 'product_id' => 'required|exists:products,id',
-                'quantity'   => 'required|integer|min:1'
+                'quantity' => 'required|integer|min:1'
             ]);
-    
+
             $cart = json_decode(Redis::get($this->cartKey), true) ?? [];
-    
+
             if (!isset($cart[$validated['product_id']])) {
                 return $this->errorResponse('Item not found in cart', 404);
             }
-    
+
             $cart[$validated['product_id']]['quantity'] = $validated['quantity'];
-    
+
             Redis::set($this->cartKey, json_encode($cart));
-    
+
             return $this->successResponse($cart, 'Cart updated');
         } catch (\Throwable $th) {
             Log::error('Cart Update Error: ' . $th->getMessage(), ['trace' => $th->getTraceAsString()]);
@@ -112,12 +112,12 @@ class CartController extends BaseApiController
     {
         try {
             $cart = json_decode(Redis::get($this->cartKey), true) ?? [];
-    
+
             if (isset($cart[$productId])) {
                 unset($cart[$productId]);
                 Redis::set($this->cartKey, json_encode($cart));
             }
-    
+
             return $this->successResponse($cart, 'Item removed from cart');
         } catch (\Throwable $th) {
             Log::error('Cart Remove Item Error: ' . $th->getMessage(), ['trace' => $th->getTraceAsString()]);
@@ -132,7 +132,7 @@ class CartController extends BaseApiController
     {
         try {
             Redis::del($this->cartKey);
-    
+
             return $this->successResponse([], 'Cart cleared');
         } catch (\Throwable $th) {
             Log::error('Cart Clear Error: ' . $th->getMessage(), ['trace' => $th->getTraceAsString()]);

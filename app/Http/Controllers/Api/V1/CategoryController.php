@@ -68,6 +68,9 @@ class CategoryController extends BaseApiController
     {
         try {
             $category = Category::findOrFail($id);
+
+            // TODO : validate related products
+
             $category->delete();
 
             return $this->successResponse(null, 'Category deleted successfully');

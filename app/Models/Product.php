@@ -11,6 +11,10 @@ class Product extends Model
         'created_at',
         'updated_at'
     ];
+    public $casts = [
+        'price' => 'integer',
+        'stock' => 'integer'
+    ];
 
     public function category()
     {
