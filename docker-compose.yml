@@ -29,10 +29,13 @@ services:
     networks:
       - read_coffee_pos_net
 
-  # redis:
-  #   image: redis:latest
-  #   ports:
-  #     - "6379:6379"
+  redis:
+    image: redis:7.4-alpine
+    container_name: read_coffe_pos_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - read_coffee_pos_net
 
 networks:
   read_coffee_pos_net:

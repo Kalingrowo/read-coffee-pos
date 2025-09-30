@@ -15,7 +15,7 @@ class CartController extends BaseApiController
     public function __construct()
     {
         // Each user has their own cart key
-        $this->cartKey = "cart:" . auth('api')->user()->id;
+        $this->cartKey = "cart:user:" . auth('sanctum')->user()->id;
     }
 
     /**
