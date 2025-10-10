@@ -16,13 +16,10 @@ class BaseApiController extends Controller
     protected function errorResponse($message = 'Error', $code = 500, $errors = null)
     {
         $response = [
-            'status' => 'error',
+            'success' => false,
             'message' => $message,
+            'errors'  => $errors,
         ];
-
-        if ($errors) {
-            $response['errors'] = $errors;
-        }
 
         return response()->json($response, $code);
     }
